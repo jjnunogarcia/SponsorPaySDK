@@ -7,6 +7,8 @@
 package com.sponsorpay.sdk.android.credentials;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.sponsorpay.sdk.android.utils.StringUtils;
 import com.sponsorpay.sdk.android.utils.UserId;
 
@@ -21,13 +23,32 @@ import java.util.UUID;
  * to change any of those.
  * </p>
  */
-public class SPCredentials {
+public class SPCredentials implements Parcelable {
+  private String mCredentialsToken;
+  private String mAppId;
+  private String mUserId;
+  private String mSecurityToken;
 
-  private final String mCredentialsToken;
+  public static final Creator<SPCredentials> CREATOR;
 
-  private final String mAppId;
-  private final String mUserId;
-  private       String mSecurityToken;
+  static {
+    CREATOR = new Creator<SPCredentials>() {
+
+      @Override
+      public SPCredentials createFromParcel(Parcel source) {
+        return new SPCredentials(source);
+      }
+
+      @Override
+      public SPCredentials[] newArray(int size) {
+        return new SPCredentials[size];
+      }
+    };
+  }
+
+  public SPCredentials() {
+    mCredentialsToken = "";
+  }
 
   public SPCredentials(String appId, String userId, String securityToken, Context context) {
     if (StringUtils.nullOrEmpty(appId)) {
@@ -41,6 +62,31 @@ public class SPCredentials {
     } else {
       mUserId = userId;
     }
+  }
+
+  private SPCredentials(Parcel source) {
+    this();
+    readFromParcel(source);
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(mCredentialsToken);
+    dest.writeString(mAppId);
+    dest.writeString(mUserId);
+    dest.writeString(mSecurityToken);
+  }
+
+  private void readFromParcel(Parcel source) {
+    mCredentialsToken = source.readString();
+    mAppId = source.readString();
+    mUserId = source.readString();
+    mSecurityToken = source.readString();
   }
 
   /**

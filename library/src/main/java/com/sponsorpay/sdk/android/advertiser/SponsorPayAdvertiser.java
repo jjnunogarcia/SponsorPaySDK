@@ -7,14 +7,23 @@
 package com.sponsorpay.sdk.android.advertiser;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.sponsorpay.sdk.android.SponsorPay;
 import com.sponsorpay.sdk.android.credentials.SPCredentials;
+import com.sponsorpay.sdk.android.receivers.CallbackResponseReceiver;
+import com.sponsorpay.sdk.android.services.AbstractService;
+import com.sponsorpay.sdk.android.services.ActionService;
+import com.sponsorpay.sdk.android.services.InstallService;
 import com.sponsorpay.sdk.android.utils.HostInfo;
 import com.sponsorpay.sdk.android.utils.SPIdException;
 import com.sponsorpay.sdk.android.utils.SPIdValidator;
 import com.sponsorpay.sdk.android.utils.SponsorPayLogger;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -56,6 +65,7 @@ public class SponsorPayAdvertiser {
   private static SponsorPayAdvertiser getInstance(Context context) {
     if (mInstance == null) {
       mInstance = new SponsorPayAdvertiser(context);
+      mInstance.registerCallbackReceiver(context);
     }
     return mInstance;
   }
@@ -78,14 +88,54 @@ public class SponsorPayAdvertiser {
     callback.trigger();
   }
 
-  private void notitfyActionCompletion(String credentialsToken, String actionId, Map<String, String> customParams) {
+  private void register(Context context, String credentialsToken, Map<String, String> customParams) {
+    SPCredentials credentials = SponsorPay.getCredentials(credentialsToken);
 
+    startInstallService(context, credentials, customParams);
+  }
+
+  private void registerCallbackReceiver(Context context) {
+    IntentFilter intentFilter = new IntentFilter(AbstractService.BROADCAST_ACTION);
+    LocalBroadcastManager.getInstance(context).registerReceiver(new CallbackResponseReceiver(), intentFilter);
+  }
+
+  private void startInstallService(Context context, SPCredentials credentials, Map<String, String> customParams) {
+    Intent installServiceIntent = new Intent(context, InstallService.class);
+    Bundle extras = new Bundle();
+    extras.putParcelable(AbstractService.KEY_CREDENTIALS, credentials);
+    if (customParams != null) {
+      extras.putSerializable(AbstractService.KEY_CUSTOM_PARAMS, new HashMap<>(customParams));
+    }
+    installServiceIntent.putExtras(extras);
+    context.startService(installServiceIntent);
+  }
+
+  private void notifyActionCompletion(String credentialsToken, String actionId, Map<String, String> customParams) {
     SPCredentials credentials = SponsorPay.getCredentials(credentialsToken);
 
 		/* Send asynchronous call to SponsorPay's API */
     ActionCallbackSender callback = new ActionCallbackSender(actionId, credentials, mPersistedState);
     callback.setCustomParams(customParams);
     callback.trigger();
+  }
+
+  private void notifyActionCompletion(Context context, String credentialsToken, String actionId, Map<String, String> customParams) {
+    SPCredentials credentials = SponsorPay.getCredentials(credentialsToken);
+
+    startActionService(context, credentials, actionId, customParams);
+  }
+
+  private void startActionService(Context context, SPCredentials credentials, String actionId, Map<String, String> customParams) {
+    Intent installServiceIntent = new Intent(context, ActionService.class);
+    Bundle extras = new Bundle();
+    extras.putParcelable(AbstractService.KEY_CREDENTIALS, credentials);
+    if (customParams == null) {
+      customParams = new HashMap<>();
+    }
+    customParams.put(ActionService.ACTION_ID_KEY, actionId);
+    extras.putSerializable(AbstractService.KEY_CUSTOM_PARAMS, new HashMap<>(customParams));
+    installServiceIntent.putExtras(extras);
+    context.startService(installServiceIntent);
   }
 
   //================================================================================
@@ -103,6 +153,10 @@ public class SponsorPayAdvertiser {
     reportActionCompletion(credentialsToken, actionId);
   }
 
+  public static void reportActionCompletion(Context context, String actionId) {
+    String credentialsToken = SponsorPay.getCurrentCredentials().getCredentialsToken();
+    reportActionCompletion(context, credentialsToken, actionId, null);
+  }
 
   /**
    * Report an Action completion.
@@ -125,17 +179,34 @@ public class SponsorPayAdvertiser {
     try {
       SPIdValidator.validate(actionId);
     } catch (SPIdException e) {
-      throw new RuntimeException("The provided Action ID is not valid. "
-                                 + e.getLocalizedMessage());
+      throw new RuntimeException("The provided Action ID is not valid. " + e.getLocalizedMessage());
     }
     if (HostInfo.isDeviceSupported()) {
-      // The actual work is performed by the notitfyActionCompletion() instance method.
+      // The actual work is performed by the notifyActionCompletion() instance method.
       //mInstance has to exist so we can have a credentialsToken, anyway, shielding it
       if (mInstance == null) {
-        throw new RuntimeException("No valid credentials object was created yet.\n" +
-                                   "You have to execute SponsorPay.start method first.");
+        throw new RuntimeException("No valid credentials object was created yet.\nYou have to execute SponsorPay.start method first.");
       }
-      mInstance.notitfyActionCompletion(credentialsToken, actionId, customParams);
+      mInstance.notifyActionCompletion(credentialsToken, actionId, customParams);
+    } else {
+      outputLogMessage();
+    }
+  }
+
+  public static void reportActionCompletion(Context context, String credentialsToken, String actionId, Map<String, String> customParams) {
+    try {
+      SPIdValidator.validate(actionId);
+    } catch (SPIdException e) {
+      throw new RuntimeException("The provided Action ID is not valid. " + e.getLocalizedMessage());
+    }
+    if (HostInfo.isDeviceSupported()) {
+      // The actual work is performed by the notifyActionCompletion() instance method.
+      //mInstance has to exist so we can have a credentialsToken, anyway, shielding it
+      if (mInstance == null) {
+        throw new RuntimeException("No valid credentials object was created yet.\nYou have to execute SponsorPay.start method first.");
+      }
+
+      mInstance.notifyActionCompletion(context, credentialsToken, actionId, customParams);
     } else {
       outputLogMessage();
     }
@@ -177,7 +248,8 @@ public class SponsorPayAdvertiser {
       getInstance(context);
 
       // The actual work is performed by the register() instance method.
-      mInstance.register(credentialsToken, customParams);
+//      mInstance.register(credentialsToken, customParams); TODO commented for the test
+      mInstance.register(context, credentialsToken, customParams);
     } else {
       outputLogMessage();
     }

@@ -15,6 +15,7 @@ import com.sponsorpay.sdk.android.advertiser.SponsorPayAdvertiser;
 import com.sponsorpay.sdk.android.credentials.SPCredentials;
 import com.sponsorpay.sdk.android.mediation.SPMediationConfigurationRequester;
 import com.sponsorpay.sdk.android.mediation.SPMediationCoordinator;
+import com.sponsorpay.sdk.android.receivers.CallbackResponseReceiver;
 import com.sponsorpay.sdk.android.utils.*;
 import com.sponsorpay.sdk.android.utils.cookies.PersistentHttpCookieStore;
 
@@ -44,8 +45,9 @@ public class SponsorPay {
 
   private HashMap<String, SPCredentials> tokensMap = new HashMap<String, SPCredentials>();
 
-  private SPCredentials currentCredentials;
-  private HostInfo      mHostInfo;
+  private SPCredentials            currentCredentials;
+  private HostInfo                 mHostInfo;
+  private CallbackResponseReceiver callbackResponseReceiver;
 
   protected SponsorPay() {
     SponsorPayParametersProvider.addParametersProvider(new SDKFeaturesProvider());
