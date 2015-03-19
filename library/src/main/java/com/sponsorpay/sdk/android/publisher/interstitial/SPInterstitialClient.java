@@ -7,10 +7,16 @@
 package com.sponsorpay.sdk.android.publisher.interstitial;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import com.sponsorpay.sdk.android.SponsorPay;
 import com.sponsorpay.sdk.android.credentials.SPCredentials;
 import com.sponsorpay.sdk.android.mediation.SPMediationCoordinator;
+import com.sponsorpay.sdk.android.receivers.interstitial.InterstitialResponseReceiver;
+import com.sponsorpay.sdk.android.services.interstitial.InterstitialService;
 import com.sponsorpay.sdk.android.utils.HostInfo;
 import com.sponsorpay.sdk.android.utils.SponsorPayLogger;
 
@@ -63,6 +69,11 @@ public class SPInterstitialClient {
     mState = SPInterstitialClientState.READY_TO_CHECK_OFFERS;
   }
 
+  private void registerInterstitialReceiver(Context context) {
+    IntentFilter intentFilter = new IntentFilter(InterstitialService.BROADCAST_ACTION);
+    LocalBroadcastManager.getInstance(context).registerReceiver(new InterstitialResponseReceiver(), intentFilter);
+  }
+
   /**
    * Queries the server for Interstitial ads availability.
    * <p/>
@@ -97,6 +108,7 @@ public class SPInterstitialClient {
     mCredentials = credentials;
     mActivity = activity;
     mRequestId = UUID.randomUUID().toString();
+    registerInterstitialReceiver(mActivity.getApplicationContext());
     SPInterstitialRequester.requestAds(credentials, mRequestId, mCustomParameters);
     setState(SPInterstitialClientState.REQUESTING_OFFERS);
   }
@@ -227,7 +239,8 @@ public class SPInterstitialClient {
    */
   public void fireEvent(SPInterstitialAd ad,
                         SPInterstitialEvent event, String message) {
-    SPInterstitialEventDispatcher.trigger(mCredentials, mRequestId, ad, event);
+//    SPInterstitialEventDispatcher.trigger(mCredentials, mRequestId, ad, event); // TODO commented for the test
+    startInterstitialService(mCredentials, mRequestId, ad, event);
     switch (event) {
       case ShowClick:
         setState(SPInterstitialClientState.READY_TO_CHECK_OFFERS);
@@ -252,6 +265,17 @@ public class SPInterstitialClient {
       default:
         break;
     }
+  }
+
+  private void startInterstitialService(SPCredentials mCredentials, String mRequestId, SPInterstitialAd ad, SPInterstitialEvent event) {
+    Intent interstitialServiceIntent = new Intent(mActivity.getApplicationContext(), InterstitialService.class);
+    Bundle extras = new Bundle();
+    extras.putParcelable(InterstitialService.KEY_CREDENTIALS, mCredentials);
+    extras.putString(InterstitialService.KEY_REQUEST_ID, mRequestId);
+    extras.putParcelable(InterstitialService.KEY_AD, ad);
+    extras.putSerializable(InterstitialService.KEY_EVENT, event);
+    interstitialServiceIntent.putExtras(extras);
+    mActivity.getApplicationContext().startService(interstitialServiceIntent);
   }
 
   /**

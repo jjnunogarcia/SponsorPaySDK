@@ -1,4 +1,4 @@
-package com.sponsorpay.sdk.android.services;
+package com.sponsorpay.sdk.android.services.advertiser;
 
 import android.app.IntentService;
 import android.content.Intent;

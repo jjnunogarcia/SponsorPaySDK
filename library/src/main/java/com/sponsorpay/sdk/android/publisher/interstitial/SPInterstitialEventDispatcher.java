@@ -23,7 +23,6 @@ import java.util.Iterator;
  * It is used by {@link SPInterstitialClient}.
  */
 public class SPInterstitialEventDispatcher extends AsyncTask<UrlBuilder, Void, Boolean> {
-
   private static final String TAG                         = "SPInterstitialEventDispatcher";
   private static final String TRACKERL_URL_KEY            = "tracker";
   private static final int    SUCCESSFUL_HTTP_STATUS_CODE = 200;
@@ -32,27 +31,20 @@ public class SPInterstitialEventDispatcher extends AsyncTask<UrlBuilder, Void, B
   private static String[] additionalParamKey    = {"ad_format", "rewarded"};
   private static String[] additionalParamValues = {"interstitial", "0"};
 
-  public static void trigger(SPCredentials credentials, String requestId,
-                             SPInterstitialAd ad, SPInterstitialEvent event) {
+  public static void trigger(SPCredentials credentials, String requestId, SPInterstitialAd ad, SPInterstitialEvent event) {
     if (credentials == null || StringUtils.nullOrEmpty(requestId) || event == null) {
       SponsorPayLogger.d(TAG, "The event cannot be sent, a required field is missing.");
     } else {
       if (ad != null) {
-        SponsorPayLogger.d(TAG, String.format(
-            "Notifiying tracker of event=%s with request_id=%s for ad_id=%s and provider_type=%s ",
-            event, requestId, ad.getAdId(),
-            ad.getProviderType()));
+        SponsorPayLogger.d(TAG, String.format("Notifiying tracker of event=%s with request_id=%s for ad_id=%s and provider_type=%s ", event, requestId, ad.getAdId(), ad.getProviderType()));
       } else {
-        SponsorPayLogger.d(TAG, String.format(
-            "Notifiying tracker of event=%s with request_id=%s",
-            event, requestId));
+        SponsorPayLogger.d(TAG, String.format("Notifiying tracker of event=%s with request_id=%s", event, requestId));
       }
       new SPInterstitialEventDispatcher().execute(getUrlBuilder(credentials, requestId, ad, event));
     }
   }
 
-  private static UrlBuilder getUrlBuilder(SPCredentials credentials, String requestId,
-                                          SPInterstitialAd ad, SPInterstitialEvent event) {
+  private static UrlBuilder getUrlBuilder(SPCredentials credentials, String requestId, SPInterstitialAd ad, SPInterstitialEvent event) {
     UrlBuilder builder = UrlBuilder.newBuilder(getBaseUrl(), credentials)
                                    .addKeyValue(SPInterstitialClient.SP_REQUEST_ID_PARAMETER_KEY, requestId)
                                    .addKeyValue("event", event.toString())
@@ -60,8 +52,7 @@ public class SPInterstitialEventDispatcher extends AsyncTask<UrlBuilder, Void, B
                                    .addScreenMetrics();
 
     if (ad != null) {
-      builder.addKeyValue("ad_id", ad.getAdId())
-             .addKeyValue("provider_type", ad.getProviderType());
+      builder.addKeyValue("ad_id", ad.getAdId()).addKeyValue("provider_type", ad.getProviderType());
 
       JSONObject trackingParameters = ad.getTrackingParameters();
       if (trackingParameters != null) {
@@ -92,8 +83,7 @@ public class SPInterstitialEventDispatcher extends AsyncTask<UrlBuilder, Void, B
     return SponsorPayBaseUrlProvider.getBaseUrl(TRACKERL_URL_KEY);
   }
 
-  private SPInterstitialEventDispatcher() {
-  }
+  private SPInterstitialEventDispatcher() {}
 
   @Override
   protected Boolean doInBackground(UrlBuilder... params) {
@@ -107,9 +97,9 @@ public class SPInterstitialEventDispatcher extends AsyncTask<UrlBuilder, Void, B
     try {
       returnValue = SPHttpConnection.getConnection(url).open().getResponseCode() == SUCCESSFUL_HTTP_STATUS_CODE;
     } catch (Exception e) {
-      SponsorPayLogger.e(TAG,
-                         "An exception occurred when trying to send advertiser callback: " + e);
+      SponsorPayLogger.e(TAG, "An exception occurred when trying to send advertiser callback: " + e);
     }
+
     return returnValue;
   }
 

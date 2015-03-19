@@ -1,11 +1,11 @@
-package com.sponsorpay.sdk.android.receivers;
+package com.sponsorpay.sdk.android.receivers.advertiser;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
-import com.sponsorpay.sdk.android.services.AbstractService;
+import com.sponsorpay.sdk.android.services.advertiser.AbstractService;
 
 /**
  * User: jesus

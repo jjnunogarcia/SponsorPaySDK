@@ -10,11 +10,15 @@
     <application>
 
         <service
-            android:name=".services.InstallService"
+            android:name=".services.advertiser.InstallService"
             android:exported="false" />
 
         <service
-            android:name=".services.ActionService"
+            android:name=".services.advertiser.ActionService"
+            android:exported="false" />
+
+        <service
+            android:name=".services.interstitial.InterstitialService"
             android:exported="false" />
 
     </application>

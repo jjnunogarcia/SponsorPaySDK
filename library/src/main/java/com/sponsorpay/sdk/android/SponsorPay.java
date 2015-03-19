@@ -15,7 +15,7 @@ import com.sponsorpay.sdk.android.advertiser.SponsorPayAdvertiser;
 import com.sponsorpay.sdk.android.credentials.SPCredentials;
 import com.sponsorpay.sdk.android.mediation.SPMediationConfigurationRequester;
 import com.sponsorpay.sdk.android.mediation.SPMediationCoordinator;
-import com.sponsorpay.sdk.android.receivers.CallbackResponseReceiver;
+import com.sponsorpay.sdk.android.receivers.advertiser.CallbackResponseReceiver;
 import com.sponsorpay.sdk.android.utils.*;
 import com.sponsorpay.sdk.android.utils.cookies.PersistentHttpCookieStore;
 
