@@ -1,0 +1,205 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/main_layout_user_segmentation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/demographics_label" />
+
+            <EditText
+                android:id="@+id/age_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/age_user_segmentation"
+                android:inputType="number" >
+
+                <requestFocus />
+            </EditText>
+
+            <EditText
+                android:id="@+id/birthdate_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/birthdate_user_segmentation"
+                android:inputType="text" />
+
+            <Spinner
+                android:id="@+id/gender_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/gender_user_segmentation"
+                android:prompt="@string/gender_user_segmentation_label" />
+
+            <Spinner
+                android:id="@+id/sexual_orientation_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/sexual_orientation_user_segmentation"
+                android:prompt="@string/sexual_orientation_user_segmentation_label" />
+
+            <Spinner
+                android:id="@+id/ethnicity_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/ethnicity_user_segmentation"
+                android:prompt="@string/ethnicity_user_segmentation_label" />
+
+            <EditText
+                android:id="@+id/location_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/location_user_segmentation"
+                android:inputType="text" />
+
+            <Spinner
+                android:id="@+id/marital_status_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/marital_status_user_segmentation"
+                android:prompt="@string/marital_status_user_segmentation_label" />
+
+            <EditText
+                android:id="@+id/number_of_childrens_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/number_of_childrens_user_segmentation"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/annual_household_income_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/annual_household_income_user_segmentation"
+                android:inputType="number" />
+
+            <Spinner
+                android:id="@+id/education_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/education_user_segmentation"
+                android:prompt="@string/education_user_segmentation_label" />
+
+            <EditText
+                android:id="@+id/zipcode_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/zipcode_user_segmentation"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/political_affiliation_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/political_affiliation_user_segmentation"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/interests_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/interests_user_segmentation"
+                android:inputType="text" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/other_data_label" />
+
+            <CheckBox
+                android:id="@+id/iap_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/iap_user_segmentation" />
+
+            <EditText
+                android:id="@+id/iap_amount_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/iap_amount_user_segmentation"
+                android:inputType="numberDecimal" />
+
+            <EditText
+                android:id="@+id/number_of_sessions_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/number_of_sessions_user_segmentation"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/ps_time_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/ps_time_user_segmentation"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/last_session_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/last_session_user_segmentation"
+                android:inputType="number" />
+
+            <Spinner
+                android:id="@+id/connection_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/connection_user_segmentation"
+                android:prompt="@string/connection_user_segmentation_label" />
+
+            <EditText
+                android:id="@+id/device_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/device_user_segmentation"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/app_version_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/app_version_user_segmentation"
+                android:inputType="text" />
+
+            <Button
+                android:id="@+id/add_custom_data_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/custom_data_button_text" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/submit_sp_user_data_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_layout_user_segmentation"
+            android:text="@string/submit_button_text" />
+    </RelativeLayout>
+
+</ScrollView>
