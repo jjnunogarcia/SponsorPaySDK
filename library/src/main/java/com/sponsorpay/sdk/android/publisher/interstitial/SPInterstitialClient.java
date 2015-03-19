@@ -237,9 +237,7 @@ public class SPInterstitialClient {
    * @param event   the event to be fired
    * @param message the message to be sent
    */
-  public void fireEvent(SPInterstitialAd ad,
-                        SPInterstitialEvent event, String message) {
-//    SPInterstitialEventDispatcher.trigger(mCredentials, mRequestId, ad, event); // TODO commented for the test
+  public void fireEvent(SPInterstitialAd ad, SPInterstitialEvent event, String message) {
     startInterstitialService(mCredentials, mRequestId, ad, event);
     switch (event) {
       case ShowClick:

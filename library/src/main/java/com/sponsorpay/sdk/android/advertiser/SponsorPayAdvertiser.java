@@ -83,9 +83,9 @@ public class SponsorPayAdvertiser {
     SPCredentials credentials = SponsorPay.getCredentials(credentialsToken);
 
 		/* Send asynchronous call to SponsorPay's API */
-    InstallCallbackSender callback = new InstallCallbackSender(credentials, mPersistedState);
-    callback.setCustomParams(customParams);
-    callback.trigger();
+//    InstallCallbackSender callback = new InstallCallbackSender(credentials, mPersistedState);
+//    callback.setCustomParams(customParams);
+//    callback.trigger();
   }
 
   private void register(Context context, String credentialsToken, Map<String, String> customParams) {
@@ -114,9 +114,9 @@ public class SponsorPayAdvertiser {
     SPCredentials credentials = SponsorPay.getCredentials(credentialsToken);
 
 		/* Send asynchronous call to SponsorPay's API */
-    ActionCallbackSender callback = new ActionCallbackSender(actionId, credentials, mPersistedState);
-    callback.setCustomParams(customParams);
-    callback.trigger();
+//    ActionCallbackSender callback = new ActionCallbackSender(actionId, credentials, mPersistedState);
+//    callback.setCustomParams(customParams);
+//    callback.trigger();
   }
 
   private void notifyActionCompletion(Context context, String credentialsToken, String actionId, Map<String, String> customParams) {
